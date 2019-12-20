@@ -25,7 +25,9 @@ public class OrderController {
 
     @PostMapping("/submit/{username}")
     public ResponseEntity<UserOrder> submit(@PathVariable String username){
+        //System.out.println("in post mapping");
         User user =userRepository.findByUsername(username);
+        System.out.println(user.getUsername());
         if (user == null){
             return ResponseEntity.notFound().build();
         }

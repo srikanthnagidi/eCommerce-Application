@@ -10,10 +10,7 @@ import com.example.udacitycource.model.requests.ModifyCartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -44,5 +41,12 @@ public class CartController {
         IntStream.range(0, request.getQuantity()).forEach(i -> cart.addItem(optionalItem.get()));
         cartRepository.save(cart);
         return ResponseEntity.ok(cart);
+    }
+
+    @GetMapping("/{username}/cart")
+    public ResponseEntity<Cart> getCartItems(@PathVariable String username){
+        User user = userRepository.findByUsername(username);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user.getCart());
     }
 }
