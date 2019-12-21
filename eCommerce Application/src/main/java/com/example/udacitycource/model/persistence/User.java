@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
-@Setter
 @Getter
 public class User {
 
@@ -19,7 +19,7 @@ public class User {
 
     @Column(nullable = false, unique = true)
     @JsonProperty
-    private String username;
+    @Setter private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
@@ -28,6 +28,14 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     @JsonIgnore
+    @Setter
     private Cart cart;
 
+    public void setPassword(String password, boolean salt){
+        if (salt){
+            this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        }else {
+            this.password = password;
+        }
+    }
 }
