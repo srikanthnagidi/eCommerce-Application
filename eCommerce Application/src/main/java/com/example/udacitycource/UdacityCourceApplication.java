@@ -3,13 +3,14 @@ package com.example.udacitycource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableJpaRepositories("com.example.udacitycource.model.persistence.repositories")
 @EntityScan("com.example.udacitycource.model.persistence")
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityFilterAutoConfiguration.class})
 public class UdacityCourceApplication {
 
     @Bean
