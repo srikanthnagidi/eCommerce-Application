@@ -1,6 +1,5 @@
 package com.example.udacitycource.controllers;
 
-
 import com.example.udacitycource.UdacityCourceApplication;
 import com.example.udacitycource.model.persistence.Cart;
 import com.example.udacitycource.model.persistence.User;
@@ -13,47 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/users")
+public class SignUpController {
 
     private static final Logger log = LoggerFactory.getLogger(UdacityCourceApplication.class);
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired private CartRepository cartRepository;
+    @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired private UserRepository userRepository;
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> findAll() {
-        List<User> users = userRepository.findAll();
-        return ResponseEntity.ok(users.stream().sorted(Comparator
-                .comparing(User::getUsername)
-                .thenComparing(User::getId))
-                .collect(Collectors.toList()));
-    }
-
-    @GetMapping("/id/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        return ResponseEntity.of(userRepository.findById(id));
-    }
-
-    @GetMapping("/{username}")
-    public ResponseEntity<User> findUserByName(@PathVariable String username) {
-        User user = userRepository.findByUsername(username);
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
-    }
-
- /*   @PostMapping("/create")
-    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> addUser(@RequestBody CreateUserRequest createUserRequest){
         log.info("Creating User {}", createUserRequest.getUsername());
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
@@ -65,10 +39,8 @@ public class UserController {
             log.error("Error with user password. Cannot create user {}", createUserRequest.getUsername());
             return ResponseEntity.badRequest().build();
         }
-        user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()), true);
+        user.setPassword(createUserRequest.getPassword(), true);
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }*/
-
-
+    }
 }
